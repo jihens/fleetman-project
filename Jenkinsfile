@@ -1,5 +1,9 @@
 pipeline {
-    agent any
+    agent {
+        kubernetes {
+            label 'docker-agent'
+        }
+    }
     stages {
         stage('Preparation') {
             steps {
