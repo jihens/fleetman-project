@@ -1,14 +1,15 @@
 pipeline {
-    agent none // No agent specified, runs on the Jenkins controller
+    agent none // No default agent, but we’ll define nodes in stages
     stages {
         stage('Verify Environment') {
             steps {
-                script {
-                    // Print environment details to verify the pipeline is running
-                    echo "Running on Jenkins controller pod"
-                    sh 'hostname'
-                    sh 'pwd'
-                    sh 'whoami'
+                node { // Explicitly define a node for this stage
+                    script {
+                        echo "Running on Jenkins controller pod"
+                        sh 'hostname'
+                        sh 'pwd'
+                        sh 'whoami'
+                    }
                 }
             }
         }
