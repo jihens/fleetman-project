@@ -1,32 +1,28 @@
+def commit_id
+
 pipeline {
-    agent {
-        kubernetes {
-            label 'docker-agent'
-        }
-    }
+    agent any
     stages {
         stage('Preparation') {
             steps {
                 checkout scm
+                sh 'git rev-parse --short HEAD > .git/commit-id'
                 script {
-                    commit_id = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+                    commit_id = readFile('.git/commit-id').trim()
                 }
-            }
-        }
-        stage('Image Build') {
-            steps {
-                echo "Building......"
-                sh 'docker build -t webapp:${commit_id} .'
-                echo "build complete"
             }
         }
         stage('Deploy') {
             steps {
-                echo "Deploying to Kubernetes"
-                sh "sed -i 's|richardchesterwood/k8s-fleetman-webapp-angular:release2|webapp:${commit_id}|' ./manifests/webapp.yaml"
-                sh 'kubectl apply -f ./manifests/'
-                sh 'kubectl get all'
-                echo "deployment complete"
+                echo 'Starting Minikube if not running...'
+                sh 'minikube status || minikube start'
+                echo 'Setting kubectl context to Minikube...'
+                sh 'kubectl config use-context minikube'
+                echo 'Deploying to Minikube...'
+                sh "sed -i 's/commit_id/${commit_id}/g' ./manifests/webapp.yaml"
+                sh "kubectl get all"
+                sh "kubectl apply -f ./manifests/"
+                echo 'Deployment complete'
             }
         }
     }
