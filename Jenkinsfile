@@ -1,7 +1,11 @@
 pipeline {
-    agent any  // Utilise l'agent par défaut de Jenkins
+    agent {
+        docker {
+            image 'bitnami/kubectl:latest'
+        }
+    }
     environment {
-        KUBECONFIG_CREDENTIALS_ID = 'kubeconfig'  // ID du kubeconfig
+        KUBECONFIG_CREDENTIALS_ID = 'kubeconfig'
     }
     stages {
         stage('Preparation') {
