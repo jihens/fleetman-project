@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'bitnami/kubectl:latest'  // Image avec kubectl
-            args '--entrypoint='  // Permettre les commandes shell
-        }
-    }
+    agent any  // Utilise l'agent par défaut de Jenkins
     environment {
         KUBECONFIG_CREDENTIALS_ID = 'kubeconfig'  // ID du kubeconfig
     }
