@@ -2,6 +2,7 @@ pipeline {
     agent any
     environment {
         KUBECONFIG_CREDENTIALS_ID = 'kubeconfig'
+        KUBECONFIG = "/var/jenkins_home/.kube/config"  // Utilise le kubeconfig monté
     }
     stages {
         stage('Preparation') {
@@ -12,12 +13,10 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                withKubeConfig([credentialsId: KUBECONFIG_CREDENTIALS_ID]) {
-                    echo 'Déploiement sur Minikube...'
-                    sh "kubectl apply -f ${WORKSPACE}/manifests/webapp.yaml"
-                    sh "kubectl get all"
-                    echo 'Déploiement terminé'
-                }
+                echo 'Déploiement sur Minikube...'
+                sh "kubectl apply -f ${WORKSPACE}/manifests/webapp.yaml"
+                sh "kubectl get all"
+                echo 'Déploiement terminé'
             }
         }
     }
