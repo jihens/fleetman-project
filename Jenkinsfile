@@ -3,8 +3,8 @@ pipeline {
        environment {
            KUBECONFIG_CREDENTIALS_ID = 'kubeconfig'
            KUBECONFIG = "/var/jenkins_home/.kube/config"
-           DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials')
-           IMAGE_NAME = "jihene/webapp"
+           DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials')
+           IMAGE_NAME = "jihenefarhani/webapp"
            IMAGE_TAG = "test-${BUILD_NUMBER}"
        }
        stages {
