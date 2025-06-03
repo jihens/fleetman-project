@@ -15,10 +15,15 @@ pipeline {
                      volumeMounts:
                      - name: docker-config
                        mountPath: /kaniko/.docker
+                     - name: kubeconfig
+                       mountPath: /var/jenkins_home/.kube
                    volumes:
                    - name: docker-config
                      secret:
                        secretName: docker-credentials
+                   - name: kubeconfig
+                     secret:
+                       secretName: kubeconfig
                  '''
              }
          }
